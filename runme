@@ -1,0 +1,4 @@
+## This file is specific to this project and assumes the shell is
+## bash
+export PROJ_DIR=`pwd`
+source  /opt/cuda-6.0/SCUDC/setup/setup.sh
