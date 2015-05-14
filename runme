@@ -1,4 +1,7 @@
+#!/bin/bash
 ## This file is specific to this project and assumes the shell is
 ## bash
 export PROJ_DIR=`pwd`
-source  /opt/cuda-6.0/SCUDC/setup/setup.sh
+
+alias cdp="cd $PROJ_DIR"
+alias cdps="cd $PROJ_DIR/standards/G729AnexC_float/software"
