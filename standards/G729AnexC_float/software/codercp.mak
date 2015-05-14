@@ -1,7 +1,7 @@
 
 # Define compiler options 
 
-CC_OPT=-std # ANSI-C option for Digital CC compiler 
+CC_OPT=-std='gnu89' # ANSI-C option for Digital CC compiler 
 
 # Targets 
 
