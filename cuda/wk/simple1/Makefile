@@ -34,7 +34,7 @@
 ################################################################################
 
 # Location of the CUDA Toolkit
-CUDA_PATH ?=/applications/cuda/6.0/linux
+CUDA_PATH  = $(CUDA_INSTALL_PATH)
 
 OSUPPER = $(shell uname -s 2>/dev/null | tr "[:lower:]" "[:upper:]")
 OSLOWER = $(shell uname -s 2>/dev/null | tr "[:upper:]" "[:lower:]")
@@ -132,14 +132,14 @@ ALL_LDFLAGS += $(addprefix -Xlinker ,$(EXTRA_LDFLAGS))
 
 # Common includes and paths for CUDA
 ##INCLUDES  := -I../../common/inc
-INCLUDES  := -I../common/inc
+INCLUDES  := -I../../common/inc
 LIBRARIES :=
 
 ################################################################################
 
 # CUDA code generation flags
 ifneq ($(OS_ARCH),armv7l)
-GENCODE_SM10    := -gencode arch=compute_10,code=sm_10
+## GENCODE_SM10    := -gencode arch=compute_10,code=sm_10
 endif
 GENCODE_SM20    := -gencode arch=compute_20,code=sm_20
 GENCODE_SM30    := -gencode arch=compute_30,code=sm_30
@@ -149,23 +149,34 @@ GENCODE_SM50    := -gencode arch=compute_50,code=sm_50
 GENCODE_SMXX    := -gencode arch=compute_50,code=compute_50
 GENCODE_FLAGS   ?= $(GENCODE_SM10) $(GENCODE_SM20) $(GENCODE_SM30) $(GENCODE_SM32) $(GENCODE_SM35) $(GENCODE_SM50) $(GENCODE_SMXX)
 
+SOURCES          = $(wildcard *.cu)
+OBJECTS          = $(patsubst %.cu,%.o,$(SOURCES))
+EXECUTABLE       = cuda
+
 ################################################################################
 
 # Target rules
 all: build
 
-build: cuda
-
-cuda.o:cuda.cu
+## Compile the files 
+## cuda.o:cuda.cu
+$(OBJECTS): $(SOURCES)
 	$(NVCC) $(INCLUDES) $(ALL_CCFLAGS) $(GENCODE_FLAGS) -o $@ -c $<
 
-cuda: cuda.o
-	$(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $@ $+ $(LIBRARIES)
+## Link the object files
+## cuda: cuda.o
+$(EXECUTABLE): $(OBJECTS)
+	$(NVCC) $(ALL_LDFLAGS) $(GENCODE_FLAGS) -o $(EXECUTABLE) $(OBJECTS) $(LIBRARIES)
+
+build: $(EXECUTABLE)
+build: GENCODE_FLAGS='-arch=sm_20' 
 
 run: build
 	./cuda
-
 clean:
-	rm -f cuda cuda.o
+	rm -f $(EXECUTABLE) $(OBJECTS) 
 
 clobber: clean
+
+all: run
+
