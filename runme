@@ -4,4 +4,6 @@
 export PROJ_DIR=`pwd`
 
 alias cdp="cd $PROJ_DIR"
+alias cdm="cd $PROJ_DIR/matlab/wk"
+alias cdc="cd $PROJ_DIR/cuda/wk"
 alias cdps="cd $PROJ_DIR/standards/G729AnexC_float/software"
