@@ -3,6 +3,7 @@
 %% 1. Preprocessing
 %% 2. LPC coefficients
 function obj = encode(obj) 
-	obj.preprocess();
-	obj.gen_lpc();
+  init(obj); 
+  pre_process(obj); 
+  gen_lpc(obj);
 end % End of the function
