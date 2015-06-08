@@ -1,14 +1,9 @@
 % This file defines a class for the frame of the g729 encoder 
 classdef g729_frm_cls < handle
 
-	% These are the input variables for the is class 
-	properties 
-		prv_frame; % Previous frame raw samples
-		cur_frame; % Current frame raw samples
-		nxt_frame; % Next frame raw samples
-	end 
-
-	% Constant Variables for the frame
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %% Constants for this function
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   properties (Constant)
     FS = 8e3; % Sample frequency is 8 KHz
 		FRM_SIZE=10e-3*g729_frm_cls.FS;
@@ -37,18 +32,35 @@ classdef g729_frm_cls < handle
     C_wlp; % Windowing constants
   end 
 
-	% These variables are generated in this class and they are floating type
-	properties (Access = public) 
-		cur_subfrm1; % Subframe 1 samples
-		cur_subfrm2; % Subframe 2 samples
-		lpc_coeff  ; % Unquantized LPC coefficients (formant filter)
-		lpc_err    ; % Error magnitued for the LPC coefficients
-	end
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  % These variables are locally defined variables used for loop statements
-  properties (Access = private)
-   i;j;m;n;
-  end 
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %% Variables that need to be passed when creating an object 
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	% These variables are related to the Frame of the current window 
+	properties 
+		prv_frame; % Previous frame raw samples (This should be out of the HP filter)
+		cur_frame; % Current frame raw samples
+		nxt_frame; % Next frame raw samples
+    
+    lp_fil_y2; % Low pass filter Y2 component
+    lp_fil_y1; % Low pass filter Y1 component
+    lp_fil_x2; % Low pass filter X2 component
+    lp_fil_x1; % Low pass filter X1 component
+	end 
+
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  %% Variables that are created during the encoder function  
+  %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	properties (Access = public) 
+		cur_subfrm1;   % Subframe 1 samples
+		cur_subfrm2;   % Subframe 2 samples
+    prp_cur_frame; % Preprocessed current frame
+		lpc_coeff;     % Unquantized LPC coefficients (formant filter)
+		lpc_err;       % Error magnitued for the LPC coefficients
+	end
 
 	% Functions used for this call
 	methods (Access = public)

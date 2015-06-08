@@ -21,16 +21,26 @@ for i = 1:Tframes-1
   j = i; % Index for the array
   c(j) = g729_frm_cls;
   c(j).C_wlp = C_wlp;
+
+  %% The first frame is a special frame where the previous samples 
+  %% are assumed to be zeros
   if i == 1 
     % When there is no frame available then pad with zeros  
 	  c(j).prv_frame = zeros(1,C_Frm_sz); 
+	  c(j).lp_fil_y2 = 0;
+	  c(j).lp_fil_y1 = 0;
+	  c(j).lp_fil_x2 = 0;
+	  c(j).lp_fil_x1 = 0;
   else 
 	  c(j).prv_frame = rss((i-2)*C_Frm_sz+1:(i-1)*C_Frm_sz);
+	  c(j).lp_fil_y2 = c(j-1).lp_fil_y2;;
+	  c(j).lp_fil_y1 = c(j-1).lp_fil_y1;;
+	  c(j).lp_fil_x2 = c(j-1).lp_fil_x2;;
+	  c(j).lp_fil_x1 = c(j-1).lp_fil_x1;;
   end 
 
 	c(j).cur_frame = rss((i-1)*C_Frm_sz+1:(i+0)*C_Frm_sz);
 	c(j).nxt_frame = rss((i+0)*C_Frm_sz+1:(i+1)*C_Frm_sz);
   c(j).encode;
-  x= sprintf('Done with loop %d',i);
 end
 
