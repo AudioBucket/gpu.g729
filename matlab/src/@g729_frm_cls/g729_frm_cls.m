@@ -29,7 +29,8 @@ classdef g729_frm_cls < handle
 
   %% Variables that are constants but they are initialized by the init function
   properties (Access = public)
-    C_wlp; % Windowing constants
+    C_wlp;  % Windowing constants
+    C_wlag; % Wlag window constant 
   end 
 
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -39,14 +40,12 @@ classdef g729_frm_cls < handle
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	% These variables are related to the Frame of the current window 
 	properties 
-		prv_frame; % Previous frame raw samples (This should be out of the HP filter)
-		cur_frame; % Current frame raw samples
-		nxt_frame; % Next frame raw samples
+    speech_3frames; % This is 3 frame worth of data samples passed to this class
     
-    lp_fil_y2; % Low pass filter Y2 component
-    lp_fil_y1; % Low pass filter Y1 component
-    lp_fil_x2; % Low pass filter X2 component
-    lp_fil_x1; % Low pass filter X1 component
+    lp_fil_y2;    % Low pass filter Y2 component
+    lp_fil_y1;    % Low pass filter Y1 component
+    lp_fil_x2;    % Low pass filter X2 component
+    lp_fil_x1;    % Low pass filter X1 component
 	end 
 
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -55,9 +54,16 @@ classdef g729_frm_cls < handle
   %% Variables that are created during the encoder function  
   %%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	properties (Access = public) 
+		prv_frame; % Previous frame raw samples (This should be out of the HP filter)
+		cur_frame; % Current frame raw samples
+		nxt_frame; % Next frame raw samples
+
 		cur_subfrm1;   % Subframe 1 samples
 		cur_subfrm2;   % Subframe 2 samples
     prp_cur_frame; % Preprocessed current frame
+
+    r_dash;        % Modified auto correlation coefficients
+    a;             % Auto correlation coefficients 
 		lpc_coeff;     % Unquantized LPC coefficients (formant filter)
 		lpc_err;       % Error magnitued for the LPC coefficients
 	end
@@ -68,6 +74,7 @@ classdef g729_frm_cls < handle
     obj = init(obj);          % Function to initialize the constant and other variables for the design 
     obj = pre_process(obj);   % Function to do the preprocessing of the speech samples 
 		obj = gen_lpc(obj);       % Function to generate the lpc coeffcicients 
+		obj = auto_corr(obj);     % Function to generate the autocorrelation of the given window 
 
     obj = encode(obj);        % Function to encode the samples, and this is the super function that calls all other 
                               % functions
