@@ -20,8 +20,6 @@ Tframes = floor(rss_n/C_Frm_sz);
 for i = 1:Tframes-1
   j = i; % Index for the array
   c(j)         = g729_frm_cls;
-  c(j).C_wlp   = C_wlp;
-  c(j).C_wlag  = C_wlag;
 
   %% The first frame is a special frame where the previous samples 
   %% are assumed to be zeros
