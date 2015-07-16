@@ -37,4 +37,3 @@ for i = 1:Tframes-1
   %% Encode the speech samples
   c(j).encode;
 end
-
