@@ -102,6 +102,8 @@ classdef g729_frm_cls < handle
 
     obj = encode(obj);        % Function to encode the samples, and this is the super function that calls all other 
                               % functions
+
+    obj = decode(obj);        % Function to decode the incmong G.729 stream
 	end
 
 
