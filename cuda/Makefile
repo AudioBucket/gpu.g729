@@ -13,5 +13,5 @@ samples: samples.tar.gz
 clean:
 		rm -rf samples.tar.gz samples
 	
-all : clean samples
+all : samples
 
